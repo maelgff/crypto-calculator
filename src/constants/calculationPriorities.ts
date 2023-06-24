@@ -1,4 +1,4 @@
-export const priorities = {
+export const priorities : { [key: string]: number } =  {
 	'+': 1,
 	'-': 1,
 	'*': 2,
