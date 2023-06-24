@@ -1,28 +1,23 @@
+import axios from 'axios'
 import allCoins from '../mocks/coins.json'
 
-interface Coin {
+export interface Coin {
 	id: string
     symbol: string
     name: string
-    platforms: any
+    platforms: {}
+    value?: number
 }
 
-// send several coin ids=bitcoin%2Cethereum
-const coingeckoFetch = async (coin: string, resultCurrency: string = 'eur')=> {
-	fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=${resultCurrency}`).then((response) =>
-		response.json().then((jsonData) => {
-			console.log(jsonData)
-			return jsonData
-		})
-	).catch((e) => {
-		console.log(e)
-	})
+const coingeckoFetch = async (coins: Array<Coin>, resultCurrency: string = 'eur')=> {
+	const coinsGetParameters = coins.map((c:Coin) => c.id).join(',')
+	return axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${coinsGetParameters}&vs_currencies=${resultCurrency}`)
 }
 
 export const findCoin = (coin: string): Coin | undefined => {
 	return allCoins.find((c: Coin) => c.symbol === coin.toLowerCase())
 }
 
-export const getCoinValue = (coin: string, currencyOfResult: string) => {
-	return coingeckoFetch(coin, currencyOfResult)
+export const getCoinsValue = (coins: Array<Coin>, currencyOfResult: string) => {
+	return coingeckoFetch(coins, currencyOfResult)
 }
