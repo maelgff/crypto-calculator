@@ -1,3 +1,8 @@
+/**
+ * This function parse the input string to return an array separating all parameters
+ * @param input
+ * @returns an array separating all parameters
+ */
 export const parseInputString = (input: string) => {
 	const tokens = []
 	let currentToken = ''

@@ -1,74 +1,90 @@
+import { useEffect, useState } from "react"
+import { Coin, findCoin, getCoinsValue } from "../api/coinsApi"
+import { useValidator } from "./useValidator"
+import { addCurrencyValueToCoinsList } from "../utils/coinsUtils"
+import { parseInputString } from "../utils/parserUtils"
+import { evaluateMathExpression } from "../utils/calculatorUtils"
+import { AxiosError } from "axios"
 
-export const evaluateExpression = (arrayOfCalculationParameters: Array<string>, coinsListWithPrices: Array<Coin>) => {
-	// Define operator priorities
-	const priorities = {
-		'+': 1,
-		'-': 1,
-		'*': 2,
-		'/': 2,
-	}
-  
-	// Helper functions for evaluating operators
-	const applyOperator = (operator: string, operand1: number, operand2: number) => {
-		switch (operator) {
-			case '+':
-				return operand1 + operand2
-			case '-':
-				return operand1 - operand2
-			case '*':
-				return operand1 * operand2
-			case '/':
-				return operand1 / operand2
-			default:
-				return 0
-		}
-	}
-  
-	const evaluate = (tokens: Array<string>) => {
-		const values: any[] = []
-		const operators = []
-  
-		for (let i = 0; i < tokens.length; i++) {
-			const token = tokens[i]
-			if (token === '(') {
-				operators.push(token)
-			} else if (!isNaN(parseInt(token))) {
-				values.push(parseFloat(token))
-			} else if (token === ')') {
-				while ( operators.length > 0 && operators[operators.length - 1] !== '(') {
-					const operator = operators.pop()
-					const operand2 = values.pop()
-					const operand1 = values.pop()
-					values.push(applyOperator(operator, operand1, operand2))
-				}
-				operators.pop()
-			} else {
-				while (operators.length > 0 && priorities[operators[operators.length - 1]] >= priorities[token]) {
-					const operator = operators.pop()
-					const operand2 = values.pop()
-					const operand1 = values.pop()
-					values.push(applyOperator(operator, operand1, operand2))
-				}
-				operators.push(token)
+interface Props {
+	resultFormat: string
+}
+
+export const useCalculator = ({ resultFormat }: Props) => {
+	const [result, setResult] = useState<string>('')
+	const [errors, setErrors] = useState<Array<string>>([])
+	const [isCalculationLoading, setIsCalculationLoading] = useState<boolean>(false)
+
+	const { validateInputString } = useValidator()
+
+	const calculateResult = (input: string) => {
+		if (input) {
+			setIsCalculationLoading(true)
+			// We validate the input
+			const isInputValid = validateInputString(input)
+			if (!isInputValid) {
+				setErrors([...errors, `Input not valid`])
+				return
 			}
+			// We parse the input
+			const arrayOfCalculationParameters = parseInputString(input)
+			// We export only the currencies
+			const onlyCryptoCurrenciesUniqueArray = [
+				...new Set(arrayOfCalculationParameters.filter((str) => /^[A-Za-z]+$/.test(str)))
+			]
+			// We build an array of cryptos with theirs values
+			const formattedCoins: Coin[] = []
+			onlyCryptoCurrenciesUniqueArray.map((c: string) => {
+				const couinFound = findCoin(c)
+				if (!couinFound) {
+					setErrors([...errors, `You wrote a crypto currency (${couinFound}) not supported`])
+					return
+				}
+				formattedCoins.push(couinFound)
+			})
+			getCoinsValue(formattedCoins, resultFormat).then((res) => {
+				// here we need to use the returned currencies values and add it on our coins array
+				const coinsArrayWithValues = addCurrencyValueToCoinsList(formattedCoins, res.data)
+				const calculatorFinalResult = replaceCurrenciesAndCalculate(
+					arrayOfCalculationParameters,
+					coinsArrayWithValues
+				)
+				if (isNaN(calculatorFinalResult)) {
+					setErrors([...errors, `An error happend during calculations`])
+					return
+				}
+				setResult(calculatorFinalResult.toString())
+				setIsCalculationLoading(false)
+			}).catch((e: AxiosError) => {
+				setErrors([...errors, `An error happend during API call and calcultations : ${e.message}`])
+				return
+			})
 		}
-  
-		while (operators.length > 0) {
-			const operator = operators.pop()
-			const operand2 = values.pop()
-			const operand1 = values.pop()
-			values.push(applyOperator(operator, operand1, operand2))
-		}
-		return values[0]
 	}
-  
-	// Replace token names with their respective prices
-	const replacedTokens = arrayOfCalculationParameters.map((token: string) => {
-		const matchingCoin = coinsListWithPrices.find((c:Coin) => c.symbol.toUpperCase() === token)
-		if (matchingCoin) {
-			return matchingCoin.value ?? token
+
+	const replaceCurrenciesAndCalculate = (arrayOfCalculationParameters: Array<string>, coinsListWithPrices: Array<Coin>) => {
+		// Replace token names with their respective prices
+		// Here I sent 'null' to produces a NaN => we don't want to show a wrong result
+		const replacedTokens = arrayOfCalculationParameters.map((token: string) => {
+			const matchingCoin = coinsListWithPrices.find((c:Coin) => c.symbol.toUpperCase() === token)
+			if (matchingCoin) {
+				return matchingCoin.value ?? 'null'
+			}
+			return token
+		})
+		return evaluateMathExpression(replacedTokens)
+	}
+
+	useEffect(() => {
+		if (errors.length) {
+			setIsCalculationLoading(false)
 		}
-		return token
-	})
-	return evaluate(replacedTokens)
+	}, [errors])
+
+	return {
+		result,
+		errors,
+		isCalculationLoading,
+		calculateResult
+	}
 }

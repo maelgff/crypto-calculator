@@ -13,66 +13,15 @@ import {
 	Heading,
 	Flex
 } from '@chakra-ui/react'
-import { Coin, findCoin, getCoinsValue } from './api/coinsApi'
-import { parseInputString } from './utils/parserUtils'
 import { useValidator } from './hooks/useValidator'
 import { AlertBanner } from './components/AlertBanner'
 import { supportedVsCurrencies } from './constants/supportedVsCurrencies'
-import { evaluateExpression } from './test'
-import { addCurrencyValueToCoinsList } from './utils/coinsUtils'
+import { useCalculator } from './hooks/useCalculator'
 
 function App() {
-	const [result, setResult] = useState<string>('')
 	const [resultFormat, setResultFormat] = useState<string>('eur')
-	const [errors, setErrors] = useState<Array<string>>([])
-	const [isLoading, setIsLoading] = useState<boolean>(false)
-
-	const { input, setInput, validateInputString } = useValidator()
-
-	const calculateResult = () => {
-		// setIsLoading(true)
-		if (input) {
-			// We validate the input
-			const isInputValid = validateInputString(input)
-			if (!isInputValid) {
-				setErrors([...errors, `Input not valid`])
-				setIsLoading(false)
-				return
-			}
-			// We parse the input
-			const arrayOfCalculationParameters = parseInputString(input)
-			// We replace coins by their value
-			const onlyCryptoCurrenciesUniqueArray = [
-				...new Set(arrayOfCalculationParameters.filter((str) => /^[A-Za-z]+$/.test(str)))
-			]
-			// We build an array of cryptos with theirs values
-			const formattedCoins: Coin[] = []
-			onlyCryptoCurrenciesUniqueArray.map((c: string) => {
-				const couinFound = findCoin(c)
-				if (!couinFound) {
-					setErrors([...errors, `You wrote a crypto currency (${couinFound}) not supported`])
-					return
-				}
-				formattedCoins.push(couinFound)
-			})
-			getCoinsValue(formattedCoins, resultFormat).then((res) => {
-				const currenciesValues = res.data
-				// here we need to use the returned currencies values and add it on our coins array
-				const coinsArrayWithValues = addCurrencyValueToCoinsList(formattedCoins, currenciesValues)
-				const calculatorFinalResult = evaluateExpression(
-					arrayOfCalculationParameters,
-					coinsArrayWithValues
-				)
-				if (isNaN(calculatorFinalResult)) {
-					setErrors([...errors, `An error happend during calculations`])
-					setIsLoading(false)
-					return
-				}
-				setResult(calculatorFinalResult)
-			})
-			setIsLoading(false)
-		}
-	}
+	const { input, setInput } = useValidator()
+	const { result, errors, isCalculationLoading, calculateResult } = useCalculator({ resultFormat })
 
 	return (
 		<Card width='600px'>
@@ -110,9 +59,9 @@ function App() {
 				<Button
 					mt='1'
 					isDisabled={input === ''}
-					isLoading={isLoading}
+					isLoading={isCalculationLoading}
 					loadingText='Calculating'
-					onClick={() => calculateResult()}
+					onClick={() => calculateResult(input)}
 				>
 					Validate
 				</Button>
