@@ -7,4 +7,13 @@ Using node v18.16.0 & npm 9.5.1
 
 ## Available commands
 
-### `npm run test`
+### To run tests
+#### `npm run test`
+### To run linter
+### `npm run lint`
+### To fix auto fixable linter error
+### `npm run lint:fix`
+### To run style linter
+### `npm run lint-style`
+### To fix auto fixable style linter error
+### `npm run lint-style:fix`

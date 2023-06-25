@@ -1,6 +1,10 @@
-import { priorities } from "../constants/calculationPriorities"
+import { priorities } from '../constants/calculationPriorities'
 
-const applyOperator = (operator: string | number | undefined, operand1: number | undefined, operand2: number | undefined) => {
+const applyOperator = (
+	operator: string | number | undefined,
+	operand1: number | undefined,
+	operand2: number | undefined
+) => {
 	if (!operand1 || !operand2) {
 		return 0
 	}
@@ -25,7 +29,10 @@ export const evaluateMathExpression = (tokens: Array<string | number>): number =
 		const token = tokens[i]
 		if (token === '(') {
 			operators.push(token)
-		} else if (typeof token === 'string' && !isNaN(parseInt(token)) || typeof token === 'number' && !isNaN(token)) {
+		} else if (
+			(typeof token === 'string' && !isNaN(parseInt(token))) ||
+			(typeof token === 'number' && !isNaN(token))
+		) {
 			if (typeof token === 'string') {
 				values.push(parseFloat(token))
 			} else values.push(token)
@@ -38,7 +45,10 @@ export const evaluateMathExpression = (tokens: Array<string | number>): number =
 			}
 			operators.pop()
 		} else {
-			while (operators.length > 0 && priorities[operators[operators.length - 1]] >= priorities[token]) {
+			while (
+				operators.length > 0 &&
+				priorities[operators[operators.length - 1]] >= priorities[token]
+			) {
 				const operator = operators.pop()
 				const operand2 = values.pop()
 				const operand1 = values.pop()

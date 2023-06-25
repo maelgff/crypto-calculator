@@ -1,6 +1,6 @@
-export const priorities : { [key: string]: number } =  {
+export const priorities: { [key: string]: number } = {
 	'+': 1,
 	'-': 1,
 	'*': 2,
-	'/': 2,
+	'/': 2
 }

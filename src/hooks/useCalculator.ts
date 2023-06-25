@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
-import { Coin, findCoin, getCoinsValue } from "../api/coinsApi"
-import { useValidator } from "./useValidator"
-import { addCurrencyValueToCoinsList } from "../utils/coinsUtils"
-import { parseInputString } from "../utils/parserUtils"
-import { evaluateMathExpression } from "../utils/calculatorUtils"
-import { AxiosError } from "axios"
+import { useEffect, useState } from 'react'
+import { Coin, findCoin, getCoinsValue } from '../api/coinsApi'
+import { useValidator } from './useValidator'
+import { addCurrencyValueToCoinsList } from '../utils/coinsUtils'
+import { parseInputString } from '../utils/parserUtils'
+import { evaluateMathExpression } from '../utils/calculatorUtils'
+import { AxiosError } from 'axios'
 
 interface Props {
 	resultFormat: string
@@ -43,35 +43,46 @@ export const useCalculator = ({ resultFormat }: Props) => {
 				formattedCoins.push(couinFound)
 			})
 			// if we don't have found all the currency or if the array is empty => save api call
-			if (formattedCoins.length !== onlyCryptoCurrenciesUniqueArray.length || formattedCoins.length === 0) {
+			if (
+				formattedCoins.length !== onlyCryptoCurrenciesUniqueArray.length ||
+				formattedCoins.length === 0
+			) {
 				setErrors([...errors, `We don't find all the crypto currency you wrote`])
 				return
 			}
-			getCoinsValue(formattedCoins, resultFormat).then((res) => {
-				// here we need to use the returned currencies values and add it on our coins array
-				const coinsArrayWithValues = addCurrencyValueToCoinsList(formattedCoins, res.data)
-				const calculatorFinalResult = replaceCurrenciesAndCalculate(
-					arrayOfCalculationParameters,
-					coinsArrayWithValues
-				)
-				if (isNaN(calculatorFinalResult)) {
-					setErrors([...errors, `An error happend during calculations`])
+			getCoinsValue(formattedCoins, resultFormat)
+				.then((res) => {
+					// here we need to use the returned currencies values and add it on our coins array
+					const coinsArrayWithValues = addCurrencyValueToCoinsList(formattedCoins, res.data)
+					const calculatorFinalResult = replaceCurrenciesAndCalculate(
+						arrayOfCalculationParameters,
+						coinsArrayWithValues
+					)
+					if (isNaN(calculatorFinalResult)) {
+						setErrors([...errors, `An error happend during calculations`])
+						return
+					}
+					setResult(calculatorFinalResult.toString())
+					setIsCalculationLoading(false)
+				})
+				.catch((e: AxiosError) => {
+					setErrors([
+						...errors,
+						`An error happend during API call and calcultations : ${e.message}`
+					])
 					return
-				}
-				setResult(calculatorFinalResult.toString())
-				setIsCalculationLoading(false)
-			}).catch((e: AxiosError) => {
-				setErrors([...errors, `An error happend during API call and calcultations : ${e.message}`])
-				return
-			})
+				})
 		}
 	}
 
-	const replaceCurrenciesAndCalculate = (arrayOfCalculationParameters: Array<string>, coinsListWithPrices: Array<Coin>) => {
+	const replaceCurrenciesAndCalculate = (
+		arrayOfCalculationParameters: Array<string>,
+		coinsListWithPrices: Array<Coin>
+	) => {
 		// Replace token names with their respective prices
 		// Here I sent 'null' to produces a NaN => we don't want to show a wrong result
 		const replacedTokens = arrayOfCalculationParameters.map((token: string) => {
-			const matchingCoin = coinsListWithPrices.find((c:Coin) => c.symbol.toUpperCase() === token)
+			const matchingCoin = coinsListWithPrices.find((c: Coin) => c.symbol.toUpperCase() === token)
 			if (matchingCoin) {
 				return matchingCoin.value ?? 'null'
 			}

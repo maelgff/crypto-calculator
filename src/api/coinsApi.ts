@@ -9,9 +9,11 @@ export interface Coin {
 	value?: number
 }
 
-const coingeckoFetch = (coins: Array<Coin>, resultCurrency: string = 'eur') => {
-	const coinsGetParameters = coins.map((c:Coin) => c.id).join(',')
-	return axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${coinsGetParameters}&vs_currencies=${resultCurrency}`)
+const coingeckoFetch = (coins: Array<Coin>, resultCurrency = 'eur') => {
+	const coinsGetParameters = coins.map((c: Coin) => c.id).join(',')
+	return axios.get(
+		`https://api.coingecko.com/api/v3/simple/price?ids=${coinsGetParameters}&vs_currencies=${resultCurrency}`
+	)
 }
 
 export const findCoin = (coin: string): Coin | undefined => {

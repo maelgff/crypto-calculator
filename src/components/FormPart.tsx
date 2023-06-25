@@ -7,7 +7,11 @@ import {
 	Box,
 	Heading,
 	Flex,
-	Stack
+	Stack,
+	Code,
+	Stat,
+	StatHelpText,
+	StatNumber
 } from '@chakra-ui/react'
 import { useValidator } from './../hooks/useValidator'
 import { supportedVsCurrencies } from './../constants/supportedVsCurrencies'
@@ -35,7 +39,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 					Calculate with crypto currencies
 				</Heading>
 				<Text fontSize='md'>
-					Try for example : <Text as='i'>3*$ETH+$BTC</Text>
+					Try for example : <Code colorScheme='red' children='3*$ETH+$BTC' />
 				</Text>
 				<Text fontSize='md' color='orange'>
 					Please only use uppercase for the currencies
@@ -70,9 +74,12 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 				Validate
 			</Button>
 			{result && (
-				<Text>
-					{result} {resultFormat}
-				</Text>
+				<Stat>
+					<StatNumber>
+						{result} {resultFormat}
+					</StatNumber>
+					<StatHelpText>{new Date().toLocaleString()}</StatHelpText>
+				</Stat>
 			)}
 			<Stack spacing={3}>
 				{recentErrors.map((e: string, idx: number) => (

@@ -1,17 +1,17 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 // Define the regular expressions for validation
 const operatorRegex = /[+\-*/]/
 const integerRegex = /^\d+$/
-const wordRegex = /^\$?[A-Z]+$/;
+const wordRegex = /^\$?[A-Z]+$/
 const hasNoLetters = /^[^a-zA-Z]+$/
 
 export const useValidator = () => {
 	const [input, setInput] = useState('')
 
 	function validateInputString(input: string) {
-		let prevChar = '';
-		let currChar = '';	  
+		let prevChar = ''
+		let currChar = ''
 		// Remove spaces from the input string
 		const trimmedInput = input.replace(/\s/g, '')
 		// Early return if we don't have a currency
@@ -46,10 +46,10 @@ export const useValidator = () => {
 			} else if (wordRegex.test(currChar)) {
 				if (!isNaN(parseInt(prevChar))) {
 					// Number follows a letter
-					return false;
-				  }
-				  prevChar = currChar
-				  continue
+					return false
+				}
+				prevChar = currChar
+				continue
 			} else {
 				// Invalid character found
 				return false
