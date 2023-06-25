@@ -50,7 +50,11 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 						</Text>
 						<Flex>
 							<FormControl isInvalid={errors.length > 0}>
-								<Input type='text' onChange={(e) => setInput(e.target.value)} />
+								<Input
+									id='calculation-input'
+									type='text'
+									onChange={(e) => setInput(e.target.value)}
+								/>
 							</FormControl>
 							<Select
 								maxWidth='100px'
@@ -69,6 +73,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 						</Flex>
 					</Box>
 					<Button
+						id='validate-input'
 						mt='1'
 						isDisabled={input === ''}
 						isLoading={isCalculationLoading}
@@ -86,7 +91,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 					</Button>
 					{result && (
 						<Stat>
-							<StatNumber>
+							<StatNumber id='result-computed'>
 								{result} {resultFormat}
 							</StatNumber>
 							<StatHelpText>{new Date().toLocaleString()}</StatHelpText>
