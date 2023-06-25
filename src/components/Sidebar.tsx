@@ -34,6 +34,7 @@ import {
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { ReactText } from 'react'
+import ColorModeToggle from './ColorModeToggle'
 
 interface LinkItemProps {
 	name: string
@@ -170,10 +171,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 				fontFamily='monospace'
 				fontWeight='bold'
 			>
-				Logo
+				Crypto calculator
 			</Text>
 
 			<HStack spacing={{ base: '0', md: '6' }}>
+				<ColorModeToggle />
 				<IconButton size='lg' variant='ghost' aria-label='open menu' icon={<FiBell />} />
 				<Flex alignItems={'center'}>
 					<Menu>

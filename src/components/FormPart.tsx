@@ -70,6 +70,13 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 				isLoading={isCalculationLoading}
 				loadingText='Calculating'
 				onClick={() => calculateResult(input)}
+				fontFamily={'heading'}
+				bgGradient='linear(to-r, red.400,pink.400)'
+				color={'white'}
+				_hover={{
+					bgGradient: 'linear(to-r, red.400,pink.400)',
+					boxShadow: 'xl'
+				}}
 			>
 				Validate
 			</Button>
