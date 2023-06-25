@@ -1,7 +1,19 @@
-import { Button, FormControl, Input, Text, Select, Box, Heading, Flex } from '@chakra-ui/react'
+import {
+	Button,
+	FormControl,
+	Input,
+	Text,
+	Select,
+	Box,
+	Heading,
+	Flex,
+	Stack
+} from '@chakra-ui/react'
 import { useValidator } from './../hooks/useValidator'
 import { supportedVsCurrencies } from './../constants/supportedVsCurrencies'
 import { useCalculator } from './../hooks/useCalculator'
+import { AlertBanner } from './AlertBanner'
+import { useMemo } from 'react'
 
 interface Props {
 	resultFormat: string
@@ -12,7 +24,9 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 	const { input, setInput } = useValidator()
 	const { result, errors, isCalculationLoading, calculateResult } = useCalculator({ resultFormat })
 
-	console.log(errors)
+	const recentErrors = useMemo(() => {
+		return [...errors].reverse()
+	}, [errors])
 
 	return (
 		<>
@@ -60,6 +74,11 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 					{result} {resultFormat}
 				</Text>
 			)}
+			<Stack spacing={3}>
+				{recentErrors.map((e: string, idx: number) => (
+					<AlertBanner key={`error-${idx}`} content={e} />
+				))}
+			</Stack>
 		</>
 	)
 }

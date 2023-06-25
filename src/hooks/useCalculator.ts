@@ -18,7 +18,6 @@ export const useCalculator = ({ resultFormat }: Props) => {
 	const { validateInputString } = useValidator()
 
 	const calculateResult = (input: string) => {
-		console.log(input)
 		if (input) {
 			setIsCalculationLoading(true)
 			// We validate the input
@@ -38,11 +37,16 @@ export const useCalculator = ({ resultFormat }: Props) => {
 			onlyCryptoCurrenciesUniqueArray.map((c: string) => {
 				const couinFound = findCoin(c)
 				if (!couinFound) {
-					setErrors([...errors, `You wrote a crypto currency (${couinFound}) not supported`])
+					setErrors([...errors, `You wrote a crypto currency (${c}) not supported`])
 					return
 				}
 				formattedCoins.push(couinFound)
 			})
+			// if we don't have found all the currency or if the array is empty => save api call
+			if (formattedCoins.length !== onlyCryptoCurrenciesUniqueArray.length || formattedCoins.length === 0) {
+				setErrors([...errors, `We don't find all the crypto currency you wrote`])
+				return
+			}
 			getCoinsValue(formattedCoins, resultFormat).then((res) => {
 				// here we need to use the returned currencies values and add it on our coins array
 				const coinsArrayWithValues = addCurrencyValueToCoinsList(formattedCoins, res.data)
