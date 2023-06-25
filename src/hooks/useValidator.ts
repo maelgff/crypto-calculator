@@ -16,7 +16,7 @@ export const useValidator = () => {
 		const trimmedInput = input.replace(/\s/g, '')
 		// Early return if we don't have a currency
 		if (hasNoLetters.test(trimmedInput)) {
-			return false
+			return { isInputValid: false, inputError : 'No crypto currency detected' }
 		}
 		for (let i = 0; i < trimmedInput.length; i++) {
 			currChar = trimmedInput[i]
@@ -33,29 +33,24 @@ export const useValidator = () => {
 				prevChar = currChar
 				continue
 			} else if (integerRegex.test(currChar)) {
-				// Integers are allowed
-				if (!isNaN(parseInt(prevChar))) {
-					// Number follows a number
-					return false
-				}
 				if (wordRegex.test(prevChar)) {
-					return false
+					return { isInputValid: false, inputError : 'A number follow a letter' }
 				}
 				prevChar = currChar
 				continue
 			} else if (wordRegex.test(currChar)) {
 				if (!isNaN(parseInt(prevChar))) {
 					// Number follows a letter
-					return false
+					return { isInputValid: false, inputError : 'A letter follow a number' }
 				}
 				prevChar = currChar
 				continue
 			} else {
 				// Invalid character found
-				return false
+				return { isInputValid: false, inputError : 'An invalid character found' }
 			}
 		}
-		return true
+		return { isInputValid: true, inputError : '' }
 	}
 
 	return {

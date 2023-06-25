@@ -21,9 +21,9 @@ export const useCalculator = ({ resultFormat }: Props) => {
 		if (input) {
 			setIsCalculationLoading(true)
 			// We validate the input
-			const isInputValid = validateInputString(input)
+			const { isInputValid, inputError } = validateInputString(input)
 			if (!isInputValid) {
-				setErrors([...errors, `Input not valid`])
+				setErrors([...errors, `Input not valid : ${inputError}`])
 				return
 			}
 			// We parse the input

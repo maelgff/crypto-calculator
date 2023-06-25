@@ -17,10 +17,10 @@ export const AlertBanner = ({ content }: Props) => {
 
 	return (
 		isVisible && (
-			<Alert status='error'>
+			<Alert status='error' overflow='visible'>
 				<AlertIcon />
 				<Box width='100%'>
-					<AlertTitle>Error!</AlertTitle>
+					<AlertTitle>Error !</AlertTitle>
 					<AlertDescription>{content}</AlertDescription>
 				</Box>
 				<CloseButton

@@ -1,4 +1,6 @@
 import { ReactNode } from 'react'
+import CalculatorPath from '../assets/img/calculator.png'
+
 import {
 	IconButton,
 	Avatar,
@@ -92,7 +94,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 		>
 			<Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
 				<Text fontSize='2xl' fontFamily='monospace' fontWeight='bold'>
-					Logo
+					<img src={CalculatorPath} alt='' width='50' />
 				</Text>
 				<CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
 			</Flex>
@@ -111,7 +113,7 @@ interface NavItemProps extends FlexProps {
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 	return (
-		<Link href='#' style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+		<Link style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
 			<Flex
 				align='center'
 				p='4'
@@ -176,7 +178,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
 			<HStack spacing={{ base: '0', md: '6' }}>
 				<ColorModeToggle />
-				<IconButton size='lg' variant='ghost' aria-label='open menu' icon={<FiBell />} />
+				<IconButton isDisabled size='lg' variant='ghost' aria-label='open menu' icon={<FiBell />} />
 				<Flex alignItems={'center'}>
 					<Menu>
 						<MenuButton py={2} transition='all 0.3s' _focus={{ boxShadow: 'none' }}>
@@ -184,7 +186,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 								<Avatar
 									size={'sm'}
 									src={
-										'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+										'https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3024&q=80'
 									}
 								/>
 								<VStack
@@ -193,7 +195,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 									spacing='1px'
 									ml='2'
 								>
-									<Text fontSize='sm'>Justina Clark</Text>
+									<Text fontSize='sm'>Mael Geoffroy</Text>
 									<Text fontSize='xs' color='gray.600'>
 										Admin
 									</Text>
@@ -207,11 +209,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 							bg={useColorModeValue('white', 'gray.900')}
 							borderColor={useColorModeValue('gray.200', 'gray.700')}
 						>
-							<MenuItem>Profile</MenuItem>
-							<MenuItem>Settings</MenuItem>
-							<MenuItem>Billing</MenuItem>
+							<MenuItem isDisabled>Profile</MenuItem>
+							<MenuItem isDisabled>Settings</MenuItem>
+							<MenuItem isDisabled>Billing</MenuItem>
 							<MenuDivider />
-							<MenuItem>Sign out</MenuItem>
+							<MenuItem isDisabled>Sign out</MenuItem>
 						</MenuList>
 					</Menu>
 				</Flex>
