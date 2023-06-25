@@ -36,7 +36,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 
 	return (
 		<>
-			<Card width='600px'>
+			<Card maxW='600px'>
 				<CardBody>
 					<Box>
 						<Heading as='h4' size='md'>

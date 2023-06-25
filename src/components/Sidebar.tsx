@@ -173,7 +173,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 				fontFamily='monospace'
 				fontWeight='bold'
 			>
-				Crypto calculator
+				<img src={CalculatorPath} alt='' width='50' />
 			</Text>
 
 			<HStack spacing={{ base: '0', md: '6' }}>
