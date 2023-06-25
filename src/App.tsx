@@ -9,6 +9,7 @@ const App = () => {
 	const [resultFormat, setResultFormat] = useState<string>('eur')
 	const { errors } = useCalculator({ resultFormat })
 
+	console.log(errors)
 	return (
 		<Card width='600px'>
 			<CardBody>

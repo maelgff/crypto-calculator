@@ -10,7 +10,9 @@ interface Props {
 
 export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 	const { input, setInput } = useValidator()
-	const { errors, isCalculationLoading, calculateResult } = useCalculator({ resultFormat })
+	const { result, errors, isCalculationLoading, calculateResult } = useCalculator({ resultFormat })
+
+	console.log(errors)
 
 	return (
 		<>
@@ -53,6 +55,11 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 			>
 				Validate
 			</Button>
+			{result && (
+				<Text>
+					{result} {resultFormat}
+				</Text>
+			)}
 		</>
 	)
 }

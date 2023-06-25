@@ -1,6 +1,6 @@
 import { parseInputString } from '../utils/parserUtils'
 
-describe('parseInputString', () => {
+describe('Test on our parserUtils', () => {
 	it('should handle simple operation', () => {
 		const input = '$ETH'
 		const expectedOutput = ['ETH']

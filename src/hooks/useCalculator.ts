@@ -18,6 +18,7 @@ export const useCalculator = ({ resultFormat }: Props) => {
 	const { validateInputString } = useValidator()
 
 	const calculateResult = (input: string) => {
+		console.log(input)
 		if (input) {
 			setIsCalculationLoading(true)
 			// We validate the input

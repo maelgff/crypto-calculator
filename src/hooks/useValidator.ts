@@ -4,6 +4,7 @@ import { useState } from "react"
 const operatorRegex = /[+\-*/]/
 const integerRegex = /^\d+$/
 const wordRegex = /^\$?[A-Z]+$/;
+const hasNoLetters = /^[^a-zA-Z]+$/
 
 export const useValidator = () => {
 	const [input, setInput] = useState('')
@@ -13,6 +14,10 @@ export const useValidator = () => {
 		let currChar = '';	  
 		// Remove spaces from the input string
 		const trimmedInput = input.replace(/\s/g, '')
+		// Early return if we don't have a currency
+		if (hasNoLetters.test(trimmedInput)) {
+			return false
+		}
 		for (let i = 0; i < trimmedInput.length; i++) {
 			currChar = trimmedInput[i]
 			if (currChar === '(' || currChar === ')') {
