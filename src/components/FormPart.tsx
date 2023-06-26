@@ -19,7 +19,7 @@ import { useValidator } from './../hooks/useValidator'
 import { supportedVsCurrencies } from './../constants/supportedVsCurrencies'
 import { useCalculator } from './../hooks/useCalculator'
 import { AlertBanner } from './AlertBanner'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import PriceGraph from './PriceGraph'
 import { CoinData, useCharts } from '../hooks/useCharts'
 
@@ -43,6 +43,16 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 		createGraphs(input)
 	}
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === 'Enter') {
+			calculateResult(input)
+		}
+	}
+
+	useEffect(() => {
+		setShowGraphs(false)
+	}, [result])
+
 	return (
 		<>
 			<Card maxW='600px'>
@@ -62,6 +72,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 								<Input
 									id='calculation-input'
 									type='text'
+									onKeyDown={handleKeyDown}
 									onChange={(e) => setInput(e.target.value)}
 								/>
 							</FormControl>

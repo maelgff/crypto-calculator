@@ -12,8 +12,9 @@ export interface CoinData {
 
 export const useCharts = ({ resultFormat }: Props) => {
 	const [dataPoints, setDataPoints] = useState<Array<CoinData>>([])
-
+	
 	const createGraphs = (input: string) => {
+		setDataPoints([])
 		if (input) {
 			const arrayOfCalculationParameters = parseInputString(input)
 			const onlyCryptoCurrenciesUniqueArray = [
