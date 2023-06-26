@@ -13,7 +13,8 @@ import {
 	StatHelpText,
 	StatNumber,
 	Card,
-	CardBody
+	CardBody,
+	useDisclosure
 } from '@chakra-ui/react'
 import { useValidator } from './../hooks/useValidator'
 import { supportedVsCurrencies } from './../constants/supportedVsCurrencies'
@@ -22,6 +23,8 @@ import { AlertBanner } from './AlertBanner'
 import { useEffect, useMemo, useState } from 'react'
 import PriceGraph from './PriceGraph'
 import { CoinData, useCharts } from '../hooks/useCharts'
+import { Coin, CoinDetail, getCoinInfo } from '../api/coinsApi'
+import { SimpleModal } from './SimpleModal'
 
 interface Props {
 	resultFormat: string
@@ -30,15 +33,32 @@ interface Props {
 
 export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 	const [showGraphs, setShowGraphs] = useState<boolean>(false)
+	const [currentCoinDetail, setCurrentCoinDetail] = useState<CoinDetail>()
 	const { input, setInput } = useValidator()
 	const { result, errors, isCalculationLoading, calculateResult, currentCoinsList } = useCalculator(
 		{ resultFormat }
 	)
 	const { createGraphs, dataPoints } = useCharts({ resultFormat })
 
+	const { isOpen, onToggle, onClose } = useDisclosure()
+
 	const recentErrors = useMemo(() => {
 		return [...errors].reverse()
 	}, [errors])
+
+	const getInfoOnCoin = (coin: Coin) => {
+		onToggle()
+		getCoinInfo(coin).then((res) => {
+			setCurrentCoinDetail({
+				image: res.data.image.large,
+				description: res.data.description.en,
+				id: res.data.id,
+				symbol: res.data.symbol,
+				name: res.data.name,
+				genesis_date: res.data.genesis_date
+			})
+		})
+	}
 
 	const getGraphs = () => {
 		setShowGraphs(true)
@@ -119,7 +139,19 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 								</StatNumber>
 								<StatHelpText>{new Date().toLocaleString()}</StatHelpText>
 							</Stat>
-							{!showGraphs && <Button onClick={() => getGraphs()}>Show graphs</Button>}
+							{!showGraphs && (
+								<Button mt={1} onClick={() => getGraphs()}>
+									Show graphs
+								</Button>
+							)}
+							{currentCoinsList &&
+								currentCoinsList.map((c: Coin) => {
+									return (
+										<Button mt={1} ml={2} onClick={() => getInfoOnCoin(c)}>
+											Need info on {c.id} ?
+										</Button>
+									)
+								})}
 						</>
 					)}
 				</CardBody>
@@ -138,6 +170,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 					<AlertBanner key={`error-${idx}`} content={e} />
 				))}
 			</Stack>
+			<SimpleModal currentCoinDetail={currentCoinDetail} isOpen={isOpen} onClose={onClose} />
 		</>
 	)
 }
