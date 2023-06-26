@@ -31,7 +31,9 @@ interface Props {
 export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 	const [showGraphs, setShowGraphs] = useState<boolean>(false)
 	const { input, setInput } = useValidator()
-	const { result, errors, isCalculationLoading, calculateResult } = useCalculator({ resultFormat })
+	const { result, errors, isCalculationLoading, calculateResult, currentCoinsList } = useCalculator(
+		{ resultFormat }
+	)
 	const { createGraphs, dataPoints } = useCharts({ resultFormat })
 
 	const recentErrors = useMemo(() => {

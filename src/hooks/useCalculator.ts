@@ -14,6 +14,7 @@ export const useCalculator = ({ resultFormat }: Props) => {
 	const [result, setResult] = useState<string>('')
 	const [errors, setErrors] = useState<Array<string>>([])
 	const [isCalculationLoading, setIsCalculationLoading] = useState<boolean>(false)
+	const [currentCoinsList, setCurrentCoinsList] = useState<Array<Coin>>([])
 
 	const { validateInputString } = useValidator()
 
@@ -42,6 +43,7 @@ export const useCalculator = ({ resultFormat }: Props) => {
 				}
 				formattedCoins.push(couinFound)
 			})
+			setCurrentCoinsList(formattedCoins)
 			// if we don't have found all the currency or if the array is empty => save api call
 			if (
 				formattedCoins.length !== onlyCryptoCurrenciesUniqueArray.length ||
@@ -102,6 +104,7 @@ export const useCalculator = ({ resultFormat }: Props) => {
 		result,
 		errors,
 		isCalculationLoading,
-		calculateResult
+		calculateResult,
+		currentCoinsList
 	}
 }
