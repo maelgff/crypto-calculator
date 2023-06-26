@@ -19,7 +19,9 @@ import { useValidator } from './../hooks/useValidator'
 import { supportedVsCurrencies } from './../constants/supportedVsCurrencies'
 import { useCalculator } from './../hooks/useCalculator'
 import { AlertBanner } from './AlertBanner'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import PriceGraph from './PriceGraph'
+import { CoinData, useCharts } from '../hooks/useCharts'
 
 interface Props {
 	resultFormat: string
@@ -27,12 +29,19 @@ interface Props {
 }
 
 export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
+	const [showGraphs, setShowGraphs] = useState<boolean>(false)
 	const { input, setInput } = useValidator()
 	const { result, errors, isCalculationLoading, calculateResult } = useCalculator({ resultFormat })
+	const { createGraphs, dataPoints } = useCharts({ resultFormat })
 
 	const recentErrors = useMemo(() => {
 		return [...errors].reverse()
 	}, [errors])
+
+	const getGraphs = () => {
+		setShowGraphs(true)
+		createGraphs(input)
+	}
 
 	return (
 		<>
@@ -49,7 +58,7 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 							Please only use uppercase for the currencies
 						</Text>
 						<Flex>
-							<FormControl isInvalid={errors.length > 0}>
+							<FormControl isInvalid={errors.length > 0 && result === ''}>
 								<Input
 									id='calculation-input'
 									type='text'
@@ -90,15 +99,27 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 						Validate
 					</Button>
 					{result && (
-						<Stat>
-							<StatNumber id='result-computed'>
-								{result} {resultFormat}
-							</StatNumber>
-							<StatHelpText>{new Date().toLocaleString()}</StatHelpText>
-						</Stat>
+						<>
+							<Stat>
+								<StatNumber id='result-computed'>
+									{result} {resultFormat}
+								</StatNumber>
+								<StatHelpText>{new Date().toLocaleString()}</StatHelpText>
+							</Stat>
+							{!showGraphs && <Button onClick={() => getGraphs()}>Show graphs</Button>}
+						</>
 					)}
 				</CardBody>
 			</Card>
+			<>
+				{showGraphs &&
+					dataPoints &&
+					dataPoints.map((d: CoinData) => {
+						return Object.entries(d).map(([coinId, data]) => {
+							return <PriceGraph key={coinId} prices={data} title={coinId} />
+						})
+					})}
+			</>
 			<Stack spacing={3} mt='3' maxH='460px' overflowY='auto'>
 				{recentErrors.map((e: string, idx: number) => (
 					<AlertBanner key={`error-${idx}`} content={e} />

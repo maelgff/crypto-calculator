@@ -94,6 +94,7 @@ export const useCalculator = ({ resultFormat }: Props) => {
 	useEffect(() => {
 		if (errors.length) {
 			setIsCalculationLoading(false)
+			setResult('')
 		}
 	}, [errors])
 
