@@ -8,11 +8,11 @@ interface Props {
 
 export interface CoinData {
 	[key: string]: number[][]
-  }
+}
 
 export const useCharts = ({ resultFormat }: Props) => {
 	const [dataPoints, setDataPoints] = useState<Array<CoinData>>([])
-	
+
 	const createGraphs = (input: string) => {
 		setDataPoints([])
 		if (input) {
@@ -31,7 +31,7 @@ export const useCharts = ({ resultFormat }: Props) => {
 					setDataPoints((prevDataPoints) => [
 						...prevDataPoints,
 						{ [couinFound.id]: res.data.prices }
-					  ])
+					])
 				})
 			})
 		}

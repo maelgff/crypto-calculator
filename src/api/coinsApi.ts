@@ -18,27 +18,23 @@ export interface CoinDetail {
 	genesis_date: string
 }
 
-
-
 export const findCoin = (coin: string): Coin | undefined => {
 	return allCoins.find((c: Coin) => c.symbol === coin.toLowerCase())
 }
 
-export const getCoinsValue = (coins: Array<Coin>, currencyOfResult: string = 'eur') => {
+export const getCoinsValue = (coins: Array<Coin>, currencyOfResult = 'eur') => {
 	const coinsGetParameters = coins.map((c: Coin) => c.id).join(',')
 	return axios.get(
 		`https://api.coingecko.com/api/v3/simple/price?ids=${coinsGetParameters}&vs_currencies=${currencyOfResult}`
 	)
 }
 
-export const getCoinHistory = (coin: Coin, currencyOfResult: string = 'eur') => {
+export const getCoinHistory = (coin: Coin, currencyOfResult = 'eur') => {
 	return axios.get(
 		`https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?&vs_currency=${currencyOfResult}&days=365`
 	)
 }
 
 export const getCoinInfo = (coin: Coin) => {
-	return axios.get(
-		`https://api.coingecko.com/api/v3/coins/${coin.id}`
-	)
+	return axios.get(`https://api.coingecko.com/api/v3/coins/${coin.id}`)
 }
