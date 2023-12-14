@@ -1,5 +1,7 @@
 # crypto-calculator
 
+To see it live : https://mael-crypto-calculator.netlify.app/
+
 ## Quick starter to launch the project
 Using node v18.16.0 & npm 9.5.1
 `npm install`
