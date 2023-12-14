@@ -25,6 +25,7 @@ import PriceGraph from './PriceGraph'
 import { CoinData, useCharts } from '../hooks/useCharts'
 import { Coin, CoinDetail, getCoinInfo } from '../api/coinsApi'
 import { SimpleModal } from './SimpleModal'
+import { AxiosResponse } from 'axios'
 
 interface Props {
 	resultFormat: string
@@ -48,10 +49,10 @@ export const FormPart = ({ resultFormat, setResultFormat }: Props) => {
 
 	const getInfoOnCoin = (coin: Coin) => {
 		onToggle()
-		getCoinInfo(coin).then((res) => {
+		getCoinInfo(coin).then((res: AxiosResponse<CoinDetail>) => {
 			setCurrentCoinDetail({
-				image: res.data.image.large,
-				description: res.data.description.en,
+				image: res.data.image,
+				description: res.data.description,
 				id: res.data.id,
 				symbol: res.data.symbol,
 				name: res.data.name,

@@ -4,7 +4,7 @@ import { useValidator } from './useValidator'
 import { addCurrencyValueToCoinsList } from '../utils/coinsUtils'
 import { parseInputString } from '../utils/parserUtils'
 import { evaluateMathExpression } from '../utils/calculatorUtils'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 interface Props {
 	resultFormat: string
@@ -53,7 +53,7 @@ export const useCalculator = ({ resultFormat }: Props) => {
 				return
 			}
 			getCoinsValue(formattedCoins, resultFormat)
-				.then((res) => {
+				.then((res: AxiosResponse<{ [x: string]: { eur: number } }>) => {
 					// here we need to use the returned currencies values and add it on our coins array
 					const coinsArrayWithValues = addCurrencyValueToCoinsList(formattedCoins, res.data)
 					const calculatorFinalResult = replaceCurrenciesAndCalculate(

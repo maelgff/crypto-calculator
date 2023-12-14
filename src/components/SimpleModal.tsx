@@ -39,7 +39,7 @@ export const SimpleModal = ({ isOpen, onClose, currentCoinDetail }: Props) => {
 								p={6}
 								textAlign={'center'}
 							>
-								<Avatar size={'xl'} src={currentCoinDetail?.image} mb={4} pos={'relative'} />
+								<Avatar size={'xl'} src={currentCoinDetail?.image.large} mb={4} pos={'relative'} />
 								<Heading fontSize={'2xl'} fontFamily={'body'}>
 									{currentCoinDetail?.name}
 								</Heading>
@@ -47,7 +47,7 @@ export const SimpleModal = ({ isOpen, onClose, currentCoinDetail }: Props) => {
 									{currentCoinDetail?.symbol}
 								</Text>
 								<Text textAlign={'center'} color={useColorModeValue('gray.700', 'gray.400')} px={3}>
-									{currentCoinDetail?.description.substring(0, 430)}...
+									{currentCoinDetail?.description.en.substring(0, 430)}...
 								</Text>
 
 								<Stack align={'center'} justify={'center'} direction={'row'} mt={6}>

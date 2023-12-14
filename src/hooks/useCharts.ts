@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Coin, findCoin, getCoinHistory } from '../api/coinsApi'
 import { parseInputString } from '../utils/parserUtils'
+import { AxiosResponse } from 'axios'
 
 interface Props {
 	resultFormat: string
@@ -27,12 +28,14 @@ export const useCharts = ({ resultFormat }: Props) => {
 					return
 				}
 				formattedCoins.push(couinFound)
-				getCoinHistory(couinFound, resultFormat).then((res) => {
-					setDataPoints((prevDataPoints) => [
-						...prevDataPoints,
-						{ [couinFound.id]: res.data.prices }
-					])
-				})
+				getCoinHistory(couinFound, resultFormat).then(
+					(res: AxiosResponse<{ prices: number[][] }>) => {
+						setDataPoints((prevDataPoints) => [
+							...prevDataPoints,
+							{ [couinFound.id]: res.data.prices }
+						])
+					}
+				)
 			})
 		}
 	}
