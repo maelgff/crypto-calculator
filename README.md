@@ -1,5 +1,7 @@
 # crypto-calculator
 
+![alt text](https://github.com/maelgff/crypto-calculator/assets/85218210/d28f9f32-9b3d-4401-b4b8-b664b37b5996)
+
 To see it live : https://mael-crypto-calculator.netlify.app/
 
 ## Quick starter to launch the project
